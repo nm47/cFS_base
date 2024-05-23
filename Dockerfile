@@ -1,6 +1,6 @@
 # Start from the Ubuntu 20.04 base image
-FROM ubuntu:20.04 as cfs
-ARG USERNAME=niels
+FROM ubuntu:20.04 as cfs_base
+ARG USERNAME=cfs_user
 
 # Set a non-interactive shell environment
 ENV DEBIAN_FRONTEND=noninteractive
