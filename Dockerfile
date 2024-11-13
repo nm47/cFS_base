@@ -19,23 +19,15 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Create user and set permissions
 RUN useradd -m ${USERNAME} && \
-    echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
-# Clone the repository
-RUN git clone --recursive https://github.com/nasa/cFS.git /home/${USERNAME}/cFS
+    git clone --recursive https://github.com/nasa/cFS.git /home/${USERNAME}/cFS
 
 WORKDIR /home/${USERNAME}/cFS
-RUN chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/cFS
-
-# Copy in the default makefile and definitions
-RUN cp cfe/cmake/Makefile.sample Makefile && \
-    cp -r cfe/cmake/sample_defs sample_defs
-
-# Build and install as the non-root user
-USER ${USERNAME}
-RUN make SIMULATION=native prep && \
+RUN chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/cFS && \
+    cd /home/${USERNAME}/cFS && \
+    cp cfe/cmake/Makefile.sample Makefile && \
+    cp -r cfe/cmake/sample_defs sample_defs && \
+    make SIMULATION=native prep && \
     make && \
     make install
 
